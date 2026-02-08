@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blox World - Вход</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #121212;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: #1e1e1e;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid #333;
+        }
+        h2 { color: #00ff88; margin-bottom: 20px; }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #252525;
+            color: white;
+            box-sizing: border-box;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+        .btn-primary { background: #00ff88; color: #000; }
+        .btn-doc { 
+            background: #2980b9; color: white; 
+            text-decoration: none; display: block; 
+            line-height: 45px; margin-top: 15px;
+            border-radius: 8px;
+        }
+        .btn-copy { background: #f39c12; color: white; margin-top: 15px; }
+        .hidden { display: none; }
+        .status { color: #00ff88; font-size: 14px; margin-top: 15px; height: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div id="step-reg">
+        <h2>Blox World</h2>
+        <input type="date" id="birthdate" required>
+        <input type="text" id="contact" placeholder="Email или Телефон" required>
+        <button class="btn-primary" onclick="goToVerify()">Получить код</button>
+    </div>
+
+    <div id="step-verify" class="hidden">
+        <h2>Код из СМС</h2>
+        <p>Введите: 1234</p>
+        <input type="text" id="sms-code" placeholder="0000" maxlength="4" style="text-align: center; font-size: 24px;">
+        <button class="btn-primary" onclick="verifyCode()">Подтвердить</button>
+    </div>
+
+    <div id="step-main" class="hidden">
+        <h2>Blox World Меню</h2>
+        
+        <a href="./дукоминтация.html" class="btn-doc">Документация</a>
+        
+        <button class="btn-copy" onclick="copyIP()">Копировать IP</button>
+        <div id="copy-status" class="status"></div>
+    </div>
+</div>
+
+<script>
+    const ipAddress = "blox-world-mc.duckdns.org:25577";
+
+    window.onload = function() {
+        if (localStorage.getItem('logged_in') === 'true') {
+            showStep('step-main');
+        }
+    };
+
+    function showStep(stepId) {
+        document.getElementById('step-reg').classList.add('hidden');
+        document.getElementById('step-verify').classList.add('hidden');
+        document.getElementById('step-main').classList.add('hidden');
+        document.getElementById(stepId).classList.remove('hidden');
+    }
+
+    function goToVerify() {
+        showStep('step-verify');
+    }
+
+    function verifyCode() {
+        const code = document.getElementById('sms-code').value;
+        if (code === "1234") {
+            localStorage.setItem('logged_in', 'true');
+            showStep('step-main');
+        } else {
+            alert("Код неверный!");
+        }
+    }
+
+    function copyIP() {
+        navigator.clipboard.writeText(ipAddress).then(() => {
+            document.getElementById('copy-status').innerText = "IP скопирован!";
+            setTimeout(() => { document.getElementById('copy-status').innerText = ""; }, 2000);
+        });
+    }
+</script>
+
+</body>
+</html>
